@@ -1,7 +1,16 @@
 import React from "react";
-import ViewImageScreen from "./app/screens/ViewImageScreen";
-import WelcomeScreen from "./app/screens/WelcomeScreen";
+import Icon from "./app/components/Icon";
+import ListItem from "./app/components/ListItem";
+import Screen from "./app/components/Screen";
 
 export default function App() {
-  return <ViewImageScreen />;
+  return (
+    <Screen>
+      <ListItem
+        title="title"
+        subTitle="subtitle"
+        ImageComponent={<Icon name="email" />}
+      />
+    </Screen>
+  );
 }
