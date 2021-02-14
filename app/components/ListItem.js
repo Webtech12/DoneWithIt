@@ -7,7 +7,7 @@ import AppText from "./Apptext";
 
 const ListItem = ({
   image,
-  ImageComponent,
+  IconComponent,
   title,
   subTitle,
   onPress,
@@ -17,7 +17,7 @@ const ListItem = ({
     <Swipeable renderRightActions={renderRightActions}>
       <TouchableOpacity onPress={onPress}>
         <View style={styles.container}>
-          {ImageComponent}
+          {IconComponent}
           {image && <Image style={styles.image} source={image} />}
           <View style={styles.detailsContainer}>
             <AppText style={styles.title}>{title}</AppText>
@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     padding: 20,
+    backgroundColor: colors.white,
   },
   detailsContainer: {
     marginLeft: 10,
