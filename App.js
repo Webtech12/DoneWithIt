@@ -1,7 +1,7 @@
 import React from "react";
-import ListingEditScreen from "./app/screens/ListingEditScreen";
 
-import LoginScreen from "./app/screens/LoginScreen";
+import Screen from "./app/components/Screen";
+import ListingEditScreen from "./app/screens/ListingEditScreen";
 
 export default function App() {
   return <ListingEditScreen />;
