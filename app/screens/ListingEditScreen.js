@@ -33,7 +33,7 @@ const categories = [
 ];
 
 const ListingEditScreen = () => {
-  const location = useLocation();
+  // const location = useLocation();
   return (
     <Screen style={styles.container}>
       <Form
@@ -44,7 +44,7 @@ const ListingEditScreen = () => {
           category: null,
           images: [],
         }}
-        onSubmit={(values) => console.log(location)}
+        onSubmit={(values) => console.log(values)}
         validationSchema={validationSchema}
       >
         <AppFormImagePicker name="images" />
