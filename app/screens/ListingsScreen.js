@@ -11,19 +11,6 @@ import listingsApi from "../api/listings";
 import AppText from "../components/Apptext";
 import AppButton from "../components/AppButton";
 
-const listings = [
-  {
-    title: "jacket",
-    subTitle: "$100",
-    image: require("../../assets/jacket.jpg"),
-  },
-  {
-    title: "couch",
-    subTitle: "$20",
-    image: require("../../assets/couch.jpg"),
-  },
-];
-
 const ListingsScreen = ({ navigation }) => {
   const getListingsApi = useApi(listingsApi.getListings);
 
