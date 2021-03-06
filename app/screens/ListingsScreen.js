@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FlatList, StyleSheet } from "react-native";
 
+import ActivityIndicator from "../components/ActivityIndicator";
+import useApi from "../hooks/useApi";
 import Card from "../components/Card";
 import Screen from "../components/Screen";
 import colors from "../config/colors";
 import routes from "../navigation/routes";
+import listingsApi from "../api/listings";
+import AppText from "../components/Apptext";
+import AppButton from "../components/AppButton";
 
 const listings = [
   {
@@ -20,10 +25,23 @@ const listings = [
 ];
 
 const ListingsScreen = ({ navigation }) => {
+  const getListingsApi = useApi(listingsApi.getListings);
+
+  useEffect(() => {
+    getListingsApi.request();
+  }, []);
+
   return (
     <Screen style={styles.screen}>
+      {getListingsApi.error && (
+        <>
+          <AppText>Couldn't retrieve the listings</AppText>
+          <AppButton title="Retry" onPress={loadListings} />
+        </>
+      )}
+      <ActivityIndicator visible={getListingsApi.loading} />
       <FlatList
-        data={listings}
+        data={getListingsApi.data}
         keyExtractor={(listings) => listings.title.toString()}
         renderItem={({ item }) => (
           <Card
