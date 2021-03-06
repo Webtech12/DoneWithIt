@@ -1,10 +1,18 @@
 import { create } from "apisauce";
+import storage from "../auth/storage";
 
 import cache from "../utils/cache";
 
 // define the api
 const api = create({
   baseURL: "https://jsonplaceholder.typicode.com",
+});
+
+api.addAsyncRequestTransform(async (request) => {
+  const authToken = await storage.getToken();
+  if (!authToken) return;
+
+  request.headers["x-auth-token"] = authToken;
 });
 
 const get = api.get;

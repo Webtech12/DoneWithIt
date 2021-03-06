@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import { Image, StyleSheet } from "react-native";
 import * as yup from "yup";
 
 import Screen from "../components/Screen";
-import { AppForm, AppFormField, AppSubmitButton } from "../components/forms";
+import {
+  AppErrorMessages,
+  AppForm,
+  AppFormField,
+  AppSubmitButton,
+} from "../components/forms";
+import auth from "../api/auth";
+import useAuth from "../auth/useAuth";
 
 const validationSchema = yup.object().shape({
   email: yup.string().required().email().label("Email"),
@@ -11,6 +18,17 @@ const validationSchema = yup.object().shape({
 });
 
 const LoginScreen = () => {
+  const { handleLogin } = useAuth();
+  const [loginFailed, setLoginFailed] = useState(false);
+
+  const handleSubmit = async ({ email, password }) => {
+    const result = await auth.login(email, password);
+    if (!result.ok) return setLoginFailed(true);
+
+    setLoginFailed(false);
+    handleLogin(result.data);
+  };
+
   return (
     <Screen style={styles.container}>
       <Image
@@ -19,9 +37,10 @@ const LoginScreen = () => {
       />
       <AppForm
         initialValues={{ email: "", password: "" }}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={handleSubmit}
         validationSchema={validationSchema}
       >
+        <AppErrorMessages error="Invalid credentials" visible={loginFailed} />
         <AppFormField
           autoCapitalize="none"
           autoCorrect={false}

@@ -1,9 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import * as Yup from "yup";
 
 import Screen from "../components/Screen";
-import { AppForm, AppFormField, AppSubmitButton } from "../components/forms";
+import {
+  AppErrorMessages,
+  AppForm,
+  AppFormField,
+  AppSubmitButton,
+} from "../components/forms";
+import auth from "../api/auth";
+import useAuth from "../auth/useAuth";
+import useApi from "../hooks/useApi";
+import ActivityIndicator from "../components/ActivityIndicator";
+import colors from "../config/colors";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
@@ -12,13 +22,38 @@ const validationSchema = Yup.object().shape({
 });
 
 const RegisterScreen = () => {
+  const registerApi = useApi(auth.register);
+  const loginApi = useApi(auth.login);
+
+  const { handleLogin } = useAuth();
+  const [registerFailed, setRegisterFailed] = useState();
+
+  const handleSubmit = async ({ email, password, name }) => {
+    const result = await registerApi.request(email, password, name);
+    if (!result.ok) {
+      if (result.data) setRegisterFailed(result.data.error);
+      else {
+        setRegisterFailed("An unexpected error occurred");
+      }
+      return;
+    }
+
+    const { data } = await loginApi.request(email, password);
+    handleLogin(data);
+  };
+
   return (
     <Screen style={styles.container}>
+      <ActivityIndicator
+        visible={registerApi.loading || loginApi.loading}
+        color={colors.white}
+      />
       <AppForm
         initialValues={{ name: "", email: "", password: "" }}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={handleSubmit}
         validationSchema={validationSchema}
       >
+        <AppErrorMessages error={registerFailed} visible={registerFailed} />
         <AppFormField
           autoCorrect={false}
           icon="account"
